@@ -8,8 +8,8 @@ import javax.swing.JOptionPane;
 
 public class BalancedPartitionNew{
 	// Hash table to store Node and it's corresponding nodes
-	NodeNew NodeWithMaxSCB = new NodeNew(-1, -1); // Null state
-	ArrayList<NodeNew> NodeList = new ArrayList<NodeNew>();	
+	GraphNode NodeWithMaxSCB = new GraphNode(-1, -1); // Null state
+	ArrayList<GraphNode> NodeList = new ArrayList<GraphNode>();	
 	int NodeSize;
 	int MaxDiff = 1;
 	int turnForServer = -1;
@@ -23,7 +23,7 @@ public class BalancedPartitionNew{
 		this.NodeSize = 0;
 	}
 	
-	public BalancedPartitionNew(ArrayList<NodeNew> myArrayList){
+	public BalancedPartitionNew(ArrayList<GraphNode> myArrayList){
 		this();
 		this.NodeList = myArrayList;
 	}
@@ -148,13 +148,13 @@ public class BalancedPartitionNew{
 		return this.totalReplicaCount;
 	}
 	
-	public void resetNodeVisited(ArrayList<NodeNew> myNodeList){
+	public void resetNodeVisited(ArrayList<GraphNode> myNodeList){
 		for(int i = 0; i < myNodeList.size(); i++){
-			NodeNew tempNodes = myNodeList.get(i);
+			GraphNode tempNodes = myNodeList.get(i);
 			tempNodes.setNodeVisited(false);
 		}
 	}
-	public void FindNodeWithMaxSCB(ArrayList<NodeNew> myNodeList, int ServerID){
+	public void FindNodeWithMaxSCB(ArrayList<GraphNode> myNodeList, int ServerID){
 		/********************************************************************/
 		//For initial phase, we will select max node from all possible nodes.
 		//After that, we will select the max node only within the neighbors of 
@@ -164,12 +164,12 @@ public class BalancedPartitionNew{
 		resetNodeVisited(myNodeList);
 		
 		//NodeWithMaxSCB = null;
-		NodeNew tempNode = null;
+		GraphNode tempNode = null;
 		int MaxSCB = -999;
 	
 		if(SelectAllNodes){ // If this is the starting state then
 			for(int i=0; i < myNodeList.size(); i++){
-				NodeNew tempNodes = myNodeList.get(i);
+				GraphNode tempNodes = myNodeList.get(i);
 				tempNodes.computeMetrics();
 			}
 
@@ -203,17 +203,17 @@ public class BalancedPartitionNew{
 			Enumeration<Integer> enumKey = NodeWithMaxSCB.myNeighbors.keys();
 			while(enumKey.hasMoreElements()) {
 			    int key = enumKey.nextElement();
-			    NodeNew myNeighbor = NodeWithMaxSCB.myNeighbors.get(key);
+			    GraphNode myNeighbor = NodeWithMaxSCB.myNeighbors.get(key);
 			    myNeighbor.computeMetrics();
 			    Enumeration<Integer> TwoHopNeighborKey =  myNeighbor.myNeighbors.keys();
 			    while(TwoHopNeighborKey.hasMoreElements()){
 			    	int myKey = TwoHopNeighborKey.nextElement();
-			    	NodeNew myTwoHopNeighbor = myNeighbor.myNeighbors.get(myKey);
+			    	GraphNode myTwoHopNeighbor = myNeighbor.myNeighbors.get(myKey);
 			    	myTwoHopNeighbor.computeMetrics();
 			    }
 			}
 						
-			NodeNew tempMaxSCBNode = new NodeNew();
+			GraphNode tempMaxSCBNode = new GraphNode();
 			int tempMax = -999;
 			boolean NotOneHopNeighbors = false;
 			// Compute SCB now
@@ -221,7 +221,7 @@ public class BalancedPartitionNew{
 			Enumeration<Integer> enumKeys = NodeWithMaxSCB.myNeighbors.keys();
 			while(enumKeys.hasMoreElements()) {
 			    int key = enumKeys.nextElement();
-			    NodeNew myNeighbor = NodeWithMaxSCB.myNeighbors.get(key);
+			    GraphNode myNeighbor = NodeWithMaxSCB.myNeighbors.get(key);
 			    myNeighbor.computeSCB();
 			    myNeighbor.setNodeVisited(true);
 			    if(myNeighbor.getMarker() == false && myNeighbor.getServerID() == ServerID && myNeighbor.getSCB() >= tempMax){ // if my current neighbor is a node with max SCB
@@ -247,12 +247,12 @@ public class BalancedPartitionNew{
 			Enumeration<Integer> myEnum = NodeWithMaxSCB.myNeighbors.keys();
 			while(myEnum.hasMoreElements()){
 				int myKey = myEnum.nextElement();
-				NodeNew myNeighbor = NodeWithMaxSCB.myNeighbors.get(myKey);
+				GraphNode myNeighbor = NodeWithMaxSCB.myNeighbors.get(myKey);
 				// we will update SCB for two hop neighbors but will not select max node from them
 			    Enumeration<Integer> TwoHopNeighborKey =  myNeighbor.myNeighbors.keys();
 			    while(TwoHopNeighborKey.hasMoreElements()){
 			    	int myKeys = TwoHopNeighborKey.nextElement();
-			    	NodeNew myTwoHopNeighbor = myNeighbor.myNeighbors.get(myKeys);
+			    	GraphNode myTwoHopNeighbor = myNeighbor.myNeighbors.get(myKeys);
 			    	if(!myTwoHopNeighbor.isNodeVisited()){
 			    		myTwoHopNeighbor.computeSCB();
 				    	if(NotOneHopNeighbors && myTwoHopNeighbor.getMarker() == false && myTwoHopNeighbor.getServerID() == ServerID && myTwoHopNeighbor.getSCB() > tempMax){ // if my current neighbor is a node with max SCB
@@ -298,15 +298,15 @@ public class BalancedPartitionNew{
 		
 	}
 
-	public void UpdateMyNeighbors(NodeNew MyNode, boolean TargetNode){
-		Hashtable<Integer, NodeNew> MyNeighbors = new Hashtable<Integer, NodeNew>();
+	public void UpdateMyNeighbors(GraphNode MyNode, boolean TargetNode){
+		Hashtable<Integer, GraphNode> MyNeighbors = new Hashtable<Integer, GraphNode>();
 		
 		MyNeighbors = MyNode.getMyNeighbors();
 		
 		Enumeration<Integer> enumKey = MyNeighbors.keys();
 		while(enumKey.hasMoreElements()){
 		    int key = enumKey.nextElement();
-		    NodeNew NeighborNode = MyNeighbors.get(key);
+		    GraphNode NeighborNode = MyNeighbors.get(key);
 		    
 		    if(TargetNode){// if this is the 1 hop neighbor of the target node
 		    	if(MyNode.getServerID() == NeighborNode.getServerID()){
@@ -321,11 +321,11 @@ public class BalancedPartitionNew{
 		    	}
 		    } else{
 		    	
-		    	Hashtable<Integer, NodeNew> myTwoHopNeighbors = NeighborNode.getMyNeighbors(); // My Two hop neighbors 
+		    	Hashtable<Integer, GraphNode> myTwoHopNeighbors = NeighborNode.getMyNeighbors(); // My Two hop neighbors 
 		    	Enumeration<Integer> enumKeys = myTwoHopNeighbors.keys();
 		    	while(enumKeys.hasMoreElements()) {
 		    	    int keys = enumKeys.nextElement();
-		    	    NodeNew TwoHopNeighbor = myTwoHopNeighbors.get(keys);
+		    	    GraphNode TwoHopNeighbor = myTwoHopNeighbors.get(keys);
 		    	    // Update remaining metrics for 1 hop or 2 hop neighbors
 		    	    TwoHopNeighbor.computeMetrics();
 		    	    TwoHopNeighbor.computeSCB();
@@ -338,7 +338,7 @@ public class BalancedPartitionNew{
 		Enumeration<Integer> enumKeys = MyNeighbors.keys();
 		while(enumKeys.hasMoreElements()) {
 		    int key = enumKeys.nextElement();
-		    NodeNew NeighborNode = MyNeighbors.get(key);
+		    GraphNode NeighborNode = MyNeighbors.get(key);
 		     	// Update remaining metrics for 1 hop or 2 hop neighbors
 				NeighborNode.computeMetrics();
 				NeighborNode.computeSCB();
@@ -381,8 +381,8 @@ public class BalancedPartitionNew{
 	// If any node has positive node gain but has all neighbor nodes with -ve or zero SCB then we will count it as contributing nodes of the final
 	// state of the algorithm
 	// If the node is not eligible then returns true else returns false
-	public boolean CheckSCBNeighbors(NodeNew myNode){
-		Hashtable<Integer, NodeNew> MyNeighbors = new Hashtable<Integer, NodeNew>();
+	public boolean CheckSCBNeighbors(GraphNode myNode){
+		Hashtable<Integer, GraphNode> MyNeighbors = new Hashtable<Integer, GraphNode>();
 		
 		MyNeighbors = myNode.getMyNeighbors();
 		
@@ -390,7 +390,7 @@ public class BalancedPartitionNew{
 		if(MyNeighbors.size() == 1){ // If the particular node has only one neighbor then in that case we can neighbor with accept zero SCB
 			
 		    int key = enumKey.nextElement();
-		    NodeNew NeighborNode = MyNeighbors.get(key);
+		    GraphNode NeighborNode = MyNeighbors.get(key);
 		    if(NeighborNode.getSCB() > 0){
 		    	return true;
 		    }
@@ -400,7 +400,7 @@ public class BalancedPartitionNew{
 		}else{
 			while(enumKey.hasMoreElements()){
 			    int key = enumKey.nextElement();
-			    NodeNew NeighborNode = MyNeighbors.get(key);
+			    GraphNode NeighborNode = MyNeighbors.get(key);
 			    if(NeighborNode.getSCB() >= 0){
 			    	return true;
 			    }
@@ -410,7 +410,7 @@ public class BalancedPartitionNew{
 		return false;
 	}
 	
-	public boolean checkForZeroAndNegativeSCB(ArrayList<NodeNew> myNodeList){
+	public boolean checkForZeroAndNegativeSCB(ArrayList<GraphNode> myNodeList){
 		int NegativeSCBCounts = 0;
 		int AllSideNegSCBCounts = 0;
 		// returns true if all the nodes from server defined by turnForServer have negative or zero SCB 
@@ -446,7 +446,7 @@ public class BalancedPartitionNew{
 	/*While inspecting one particular example it is concluded that
 	 * the final state of the algorithm will end with zero or -ve SCB of the server
 	 * whose one of the nodes is going to be changed in next step */
-	public boolean DetermineFinalState(ArrayList<NodeNew> myNodeList){ 
+	public boolean DetermineFinalState(ArrayList<GraphNode> myNodeList){ 
 	//public boolean DetermineFinalState(ArrayList<Node> myNodeList, int ServerTurn){ 
 		// If all the nodes has zero or negative SCB then we declare the end state of the algorithm
 
@@ -489,7 +489,7 @@ public class BalancedPartitionNew{
 		return true;	
 	}
 */
-	public int getNodeCounts(ArrayList<NodeNew> myNodeList){
+	public int getNodeCounts(ArrayList<GraphNode> myNodeList){
 		int NodeCnt = 0;
 		for(int i = 0; i < myNodeList.size(); i++){
 			if(myNodeList.get(i).getServerID() == 1){
@@ -501,7 +501,7 @@ public class BalancedPartitionNew{
 		return NodeCnt;
 	}
 
-	public void resetReplicas(ArrayList<NodeNew> NodeList){
+	public void resetReplicas(ArrayList<GraphNode> NodeList){
 		// mark false it replicaCounted is true
 		for(int i = 0; i < NodeList.size(); i++){
 			if(NodeList.get(i).getReplicaCounted()){
@@ -510,18 +510,18 @@ public class BalancedPartitionNew{
 		}
 	}
 
-	public int returnReplicas(ArrayList<NodeNew> NodeList){
+	public int returnReplicas(ArrayList<GraphNode> NodeList){
 		this.resetReplicas(NodeList);
 		int TotalReplicas = 0;
 		for(int i = 0; i < NodeList.size(); i++){
-			NodeNew currentNode = NodeList.get(i);
-			Hashtable<Integer, NodeNew> NeighborsList = new Hashtable<Integer, NodeNew>();
+			GraphNode currentNode = NodeList.get(i);
+			Hashtable<Integer, GraphNode> NeighborsList = new Hashtable<Integer, GraphNode>();
 			NeighborsList = currentNode.getMyNeighbors();
 			
 			Enumeration<Integer> enumKeys = NeighborsList.keys();
 			while(enumKeys.hasMoreElements()) {
 			    int key = enumKeys.nextElement();
-			    NodeNew NeighborNode = NeighborsList.get(key);
+			    GraphNode NeighborNode = NeighborsList.get(key);
 			    if(currentNode.getServerID() != NeighborNode.getServerID() && NeighborNode.ReplicaCounted == false){
 			    	// if they are from different servers then it will contribute to two replicas
 			    	TotalReplicas++;
@@ -533,7 +533,7 @@ public class BalancedPartitionNew{
 		return TotalReplicas;
 	}
 	
-	public void printAllNodeDetails(ArrayList<NodeNew> NodeList){
+	public void printAllNodeDetails(ArrayList<GraphNode> NodeList){
 		int NodeListSize = NodeList.size();
 		System.out.println("Printing Node Details: ");
 		for(int i = 0; i < NodeListSize; i++ ){

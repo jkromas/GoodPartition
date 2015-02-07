@@ -19,7 +19,7 @@ public class Node {
 	boolean Marker; // to mark the node which is just been selected as a node with highest SCB
 	boolean ReplicaCounted; // True if it's replica is being considered
 	
-	Hashtable <Integer, NodeNew> myNeighbors = new Hashtable<Integer, NodeNew>();
+	Hashtable <Integer, GraphNode> myNeighbors = new Hashtable<Integer, GraphNode>();
 	
 	public Node(){
 		
@@ -39,7 +39,7 @@ public class Node {
 		this.setServerID(_ServerID);
 	}
 
-public void setNeigbors(NodeNew Neighbor){
+public void setNeigbors(GraphNode Neighbor){
 	
 	myNeighbors.put(Neighbor.getNodeID(), Neighbor);
 	
@@ -64,7 +64,7 @@ public void printMyDetails(){
 	System.out.println("SCB: " + this.getSCB());
 	System.out.println();
 }
-public void printNodeDetails(NodeNew myNode){
+public void printNodeDetails(GraphNode myNode){
 	System.out.println("NodeID: " + myNode.getNodeID());
 	System.out.println("ServerID: " + myNode.getServerID());
 	System.out.println("SCB: " + myNode.getSCB());
@@ -84,7 +84,7 @@ public void printNeighbors(){
 	Enumeration<Integer> enumKey = myNeighbors.keys();
 	while(enumKey.hasMoreElements()) {
 	    int key = enumKey.nextElement();
-	    NodeNew myNodes = myNeighbors.get(key);
+	    GraphNode myNodes = myNeighbors.get(key);
 	    myNodes.printNodeDetails(myNodes);
 	}
 	   
@@ -203,7 +203,7 @@ public int getSCB(){
 	return this.SCB;
 }
 
-public Hashtable<Integer, NodeNew> getMyNeighbors(){
+public Hashtable<Integer, GraphNode> getMyNeighbors(){
 	return this.myNeighbors;
 }
 
@@ -236,7 +236,7 @@ public void computeMetrics(){ // Computing Same Side and Pure Same Side Neighbor
 	Enumeration<Integer> enumKey = myNeighbors.keys();
 	while(enumKey.hasMoreElements()) {
 	    int key = enumKey.nextElement();
-	    NodeNew myNode = myNeighbors.get(key);
+	    GraphNode myNode = myNeighbors.get(key);
 	    
 	    // Compute PSSN, and DSSN 
 	    if((myNode.getServerID() == this.getServerID()) && myNode.getDSNC() == 0){ 

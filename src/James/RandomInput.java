@@ -13,7 +13,7 @@ public class RandomInput{
 	int NumNodes;
 	Random rand = new Random();
 	int[][] AdjacencyMatrix = new int[1000][1000];
-	ArrayList<NodeNew> myNodeList = new ArrayList<NodeNew>();
+	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();
 	String FileName = "input.txt";
 	int myProbability;
 	
@@ -47,7 +47,7 @@ public class RandomInput{
 		}
 	}
 	
-	public ArrayList<NodeNew> getNodeList(){
+	public ArrayList<GraphNode> getNodeList(){
 		return this.myNodeList;
 	}
 	
@@ -58,8 +58,8 @@ public class RandomInput{
 		for(int i = 0; i < NumNodes; i++){
 			for(int j = i; j < NumNodes; j++){
 				if(i != j && AdjacencyMatrix[i][j] == 1){ // if they are connected
-					NodeNew myNode = this.myNodeList.get(i);
-					NodeNew myNeighbor = this.myNodeList.get(j);
+					GraphNode myNode = this.myNodeList.get(i);
+					GraphNode myNeighbor = this.myNodeList.get(j);
 					myNode.setNeigbors(myNeighbor);
 					myNeighbor.setNeigbors(myNode);
 				}
@@ -70,15 +70,15 @@ public class RandomInput{
 	
 	public void assignServer(){
 		for(int i = 0; i < this.NumNodes; i++){
-			NodeNew temp = new NodeNew(i+1, 0);
+			GraphNode temp = new GraphNode(i+1, 0);
 			this.myNodeList.add(temp);
 		}
 		
 		for(int m = 0; m < this.NumNodes; m++){
 			for(int n = m; n < this.NumNodes; n++){
 				if(m != n && this.AdjacencyMatrix[m][n] == 1){ // if they are connected
-					NodeNew myNode = this.myNodeList.get(m);
-					NodeNew myNeighbor = this.myNodeList.get(n);
+					GraphNode myNode = this.myNodeList.get(m);
+					GraphNode myNeighbor = this.myNodeList.get(n);
 					myNode.setNeigbors(myNeighbor);
 					myNeighbor.setNeigbors(myNode);
 				}

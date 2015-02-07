@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 public class myInput {
-	ArrayList<NodeNew> myNodeList = new ArrayList<NodeNew>();	
+	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();	
 	int[][] AdjacencyMatrix = new int[100][100];
 	int NumNodes = AdjacencyMatrix.length;
 	static int StepCounter = 0;
@@ -127,15 +127,15 @@ public void generateGraph(int[][] myGraph, int Starter){
 public void assignServer(int[][] myGraph){
 	this.myNodeList.clear();
 	for(int i = 0; i < this.NumNodes; i++){
-		NodeNew temp = new NodeNew(i+1, 0);
+		GraphNode temp = new GraphNode(i+1, 0);
 		this.myNodeList.add(temp);
 	}
 	
 	for(int m = 0; m < this.NumNodes; m++){
 		for(int n = m; n < this.NumNodes; n++){
 			if(m != n && myGraph[m][n] == 1){ // if they are connected
-				NodeNew myNode = this.myNodeList.get(m);
-				NodeNew myNeighbor = this.myNodeList.get(n);
+				GraphNode myNode = this.myNodeList.get(m);
+				GraphNode myNeighbor = this.myNodeList.get(n);
 				myNode.setNeigbors(myNeighbor);
 				myNeighbor.setNeigbors(myNode);
 			}

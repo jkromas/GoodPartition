@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 
-public class NodeNew {
+public class GraphNode {
 
 	// Properties of a Node
 	int NodeID;
@@ -20,9 +20,9 @@ public class NodeNew {
 	boolean ReplicaCounted; // True if it's replica is being considered
 	boolean isNodeVisited = false;
 	
-	Hashtable <Integer, NodeNew> myNeighbors = new Hashtable<Integer, NodeNew>();
+	Hashtable <Integer, GraphNode> myNeighbors = new Hashtable<Integer, GraphNode>();
 	
-	public NodeNew(){
+	public GraphNode(){
 		
 		this.PSSN = 0;
 		this.PDSN = 0;
@@ -35,12 +35,12 @@ public class NodeNew {
 		ReplicaCounted = false;
 	}
 	
-	public NodeNew(int _ID, int _ServerID){
+	public GraphNode(int _ID, int _ServerID){
 		this.setNodeID(_ID);
 		this.setServerID(_ServerID);
 	}
 
-public void setNeigbors(NodeNew Neighbor){
+public void setNeigbors(GraphNode Neighbor){
 	
 	myNeighbors.put(Neighbor.getNodeID(), Neighbor);
 	
@@ -65,7 +65,7 @@ public void printMyDetails(){
 	System.out.println("SCB: " + this.getSCB());
 	System.out.println();
 }
-public void printNodeDetails(NodeNew myNode){
+public void printNodeDetails(GraphNode myNode){
 	System.out.println("NodeID: " + myNode.getNodeID());
 	System.out.println("ServerID: " + myNode.getServerID());
 	System.out.println("SCB: " + myNode.getSCB());
@@ -85,7 +85,7 @@ public void printNeighbors(){
 	Enumeration<Integer> enumKey = myNeighbors.keys();
 	while(enumKey.hasMoreElements()) {
 	    int key = enumKey.nextElement();
-	    NodeNew myNodes = myNeighbors.get(key);
+	    GraphNode myNodes = myNeighbors.get(key);
 	    myNodes.printNodeDetails(myNodes);
 	}
 	   
@@ -204,7 +204,7 @@ public int getSCB(){
 	return this.SCB;
 }
 
-public Hashtable<Integer, NodeNew> getMyNeighbors(){
+public Hashtable<Integer, GraphNode> getMyNeighbors(){
 	return this.myNeighbors;
 }
 
@@ -237,7 +237,7 @@ public void computeMetrics(){ // Computing Same Side and Pure Same Side Neighbor
 	Enumeration<Integer> enumKey = myNeighbors.keys();
 	while(enumKey.hasMoreElements()) {
 	    int key = enumKey.nextElement();
-	    NodeNew myNode = myNeighbors.get(key);
+	    GraphNode myNode = myNeighbors.get(key);
 	    
 	    // Compute PSSN, and DSSN 
 	    if((myNode.getServerID() == this.getServerID()) && myNode.getDSNC() == 0){ 
@@ -255,7 +255,7 @@ public void computeMetrics(){ // Computing Same Side and Pure Same Side Neighbor
 	}
 }
 
-public boolean isNeighbor(NodeNew myNode){
+public boolean isNeighbor(GraphNode myNode){
 	
 	if(this.myNeighbors.containsKey(myNode)){
 		return true;
@@ -263,7 +263,7 @@ public boolean isNeighbor(NodeNew myNode){
 	
 }
 
-public boolean isTwoHopNeighbor(NodeNew myNode){
+public boolean isTwoHopNeighbor(GraphNode myNode){
 	
 	for(int i = 0; i < this.myNeighbors.size(); i++){
 		if(this.myNeighbors.containsKey(myNode)){

@@ -33,7 +33,9 @@ public class Main {
 		//RandomInput myInput = new RandomInput(5, "Examples//Input (7).txt"); // Loop Count = 1; Replicas = 4 
 		//RandomInput myInput = new RandomInput(8, "Examples//Input (8).txt"); // Loop Count = 0; Replicas = 5
 		//RandomInput myInput = new RandomInput(6, "Examples//Input (9).txt"); // Loop Count = 0; Replicas = 5 
-		RandomInput myInput = new RandomInput(7, "Examples//Input (10)"); // Loop Count = 0; Replicas = 4 
+		//RandomInput myInput = new RandomInput(7, "Examples//Input (10)"); // Loop Count = 0; Replicas = 4 
+		//RandomInput myInput = new RandomInput(9, "Examples//Example_9_Slide.txt"); // Loop Count = 4; Replicas = 8
+		RandomInput myInput = new RandomInput(6, "Examples//Example_Loop_Count_9.txt"); // Loop Count = 9; Replicas = 5
 		
 		
   
@@ -49,79 +51,6 @@ public class Main {
 		myPartition.FindPartition();
 
 		
-//		Random rand = new Random();
-//		for(int i = 0; i < 100; i++){
-//			int TotalNodes = rand.nextInt(10);
-//			if(TotalNodes < 5){
-//				TotalNodes = 5;
-//			}
-//			
-//			int probability = rand.nextInt(50);
-//			if(probability < 20){
-//				probability = 20;
-//			}
-//		
-//		
-//			RandomInput myInput = new RandomInput(TotalNodes, probability);
-//			myInput.generateNodeList();
-//		
-//			BalancedPartition myNewPartition = new BalancedPartition(myInput.getNodeList());
-//			myNewPartition.FindPartition();
-//			
-//			System.out.println("------------------------New Algorithm--------------------------------:");
-//			System.out.println("Total Replicas New Algorithm: " + myNewPartition.replicaCount());
-//			
-//			try {
-//				TimeUnit.SECONDS.sleep(1);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-//			
-//			RandomInput myInputs = new RandomInput(TotalNodes, "Examples//Input.txt"); 
-//			try {
-//				myInputs.readInputFile();
-//			} catch (FileNotFoundException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}	
-			
-			//BalancedPartitionOld myOldPartition = new BalancedPartitionOld(myInput.getNodeList());
-			//myOldPartition.FindPartition();
-//			System.out.println("------------------------Old Algorithm--------------------------------:");
-//			System.out.println("Total Replicas Old Algorithm: " + myOldPartition.replicaCount());
-//			
-//			if(myOldPartition.replicaCount() != 0 || myNewPartition.replicaCount() != 0){
-//				
-//				int replicaDiff = myOldPartition.replicaCount() -  myNewPartition.replicaCount();
-//				if(replicaDiff == 0){ // Both algorithm has same input
-//					SameOutputCount++;
-//				}
-//				else if(replicaDiff > 0){
-//					NewAlgorithmEfficientCnt++;
-//				}
-//				else if(replicaDiff < 0){
-//					OldAlgorithmEfficientCnt++;
-//				}
-//			}
-		
-			
-//			try {
-//				TimeUnit.SECONDS.sleep(5);
-//			} catch (InterruptedException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
-		//}
-		
-//		System.out.println("-----------------------------------------------------------------:");
-//		System.out.println("New Algorithm Efficiency Count: " + NewAlgorithmEfficientCnt);
-//		System.out.println("-----------------------------------------------------------------:");
-//		System.out.println("Old Algorithm Efficiency Count: " + OldAlgorithmEfficientCnt);
-//		System.out.println("-----------------------------------------------------------------:");
-//		System.out.println("Both of Them Have Same Input: " + SameOutputCount);
-//		System.out.println("-----------------------------------------------------------------:");
-//	
 	}
 
 }
