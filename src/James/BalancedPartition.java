@@ -51,10 +51,11 @@ public class BalancedPartition{
 	}
 	
 	public void setMaxDiff(int TotalNodes){
+		// For Even Nodes
 		if(TotalNodes%2 == 0){
 			this.MaxDiff = 2;
-		} // Even
-		else this.MaxDiff = 1;
+		} // Odd Nodes
+		else this.MaxDiff = 3;
 	}
 	
 	public void FindPartition(){
@@ -73,7 +74,7 @@ public class BalancedPartition{
 		
 		int NumNodesDiff = 0;
 		
-		for(int j = 0; j < NodeSize/2; j++){
+		for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
 			this.FindNodeWithMaxSCB(NodeList, 0);
 			this.RunAlgorithm();
 			this.printAllNodeDetails(NodeList);
@@ -123,10 +124,10 @@ public class BalancedPartition{
 				//JOptionPane.showMessageDialog(null, "TurnServer: " + TurnForServer);
 			}		
 			// To make sure there is no infinite loop inside this while loop
-			if(LoopCnt >= 6){
+			if(LoopCnt >= 100){
 				
 				JOptionPane.showMessageDialog(null, "Alert! Loop Count: " + LoopCnt);
-				
+				break;
 			}
 		}
 		
@@ -290,6 +291,20 @@ public class BalancedPartition{
 		return false;
 	}
 	
+	public boolean checkForAllZeros(ArrayList<GraphNode> myNodeList){
+		for(int i = 0; i < myNodeList.size(); i++){
+			
+			if(myNodeList.get(i).getSCB() != 0){ 
+					return false;
+			}
+			
+		}
+		
+			
+		return true; // if all of SCBs are zero
+		
+	}
+	
 	public boolean checkForZeroAndNegativeSCB(ArrayList<GraphNode> myNodeList){
 		int NegativeSCBCounts = 0;
 		int AllSideNegSCBCounts = 0;
@@ -331,17 +346,20 @@ public class BalancedPartition{
 		// If all the nodes has zero or negative SCB then we declare the end state of the algorithm
 
 		//JOptionPane.showMessageDialog(null, "Testing Loops");
-		
-		if(this.turnForServer == 0 && getNumNodeServer0() >= getNumNodeServer1()){
+		if(checkForAllZeros(myNodeList)){
+			//JOptionPane.showMessageDialog(null, "hi i am checkallzeros");
+			return true;
+		}else if(this.turnForServer == 0 && getNumNodeServer0() >= getNumNodeServer1()){
 			
 			return(checkForZeroAndNegativeSCB(myNodeList));	
 			
 		}else if(this.turnForServer == 1 && getNumNodeServer1() >= getNumNodeServer0()){
 			
 			return(checkForZeroAndNegativeSCB(myNodeList));
+		}else{
+			return false;
 		}
-		
-		return false;
+
 	}
 
 

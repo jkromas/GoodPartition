@@ -36,6 +36,7 @@ public class Main {
 		//RandomInput myInput = new RandomInput(7, "Examples//Input (10)"); // Loop Count = 0; Replicas = 4 
 		//RandomInput myInput = new RandomInput(9, "Examples//Example_9_Slide.txt"); // Loop Count = 4; Replicas = 8
 		RandomInput myInput = new RandomInput(6, "Examples//Example_Loop_Count_9.txt"); // Loop Count = 9; Replicas = 5
+		//RandomInput myInput = new RandomInput(5, "Examples//Example_InfiniteLoop.txt"); // Loop Count = 9; Replicas = 5
 		
 		
   

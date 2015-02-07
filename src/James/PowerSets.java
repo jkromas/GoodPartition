@@ -21,7 +21,7 @@ public class PowerSets{
 	/**
 	 * Defining an object of class RandomInput
 	 */
-	static int myAdjMatrix[][];
+	int myAdjMatrix[][];
 	int NumNodes;
 	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();
 	
@@ -65,11 +65,11 @@ public class PowerSets{
 	   //the number of members of a power set is 2^n
 	   // To avoid exponential effect of 2^elements
 	   int powerElements;
-	   //if(elements < 16){
+	   if(elements < 16){
 		   powerElements = (int) Math.pow(2,elements);
-	  // }else{
-		  // powerElements = 10000;
-	  // }
+	  }else{
+		  powerElements = 100000;
+	  }
 	   //run a binary counter for the number of power elements
 	   for (int i = 0; i < powerElements; i++) { 
 		     
@@ -286,7 +286,7 @@ public class PowerSets{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PowerSets myPowerSets = new PowerSets(6);
+		PowerSets myPowerSets = new PowerSets(7);
 		myPowerSets.getFilteredPowerSets();
 		
 		
