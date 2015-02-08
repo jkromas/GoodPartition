@@ -131,11 +131,7 @@ public class BalancedPartition{
 				//JOptionPane.showMessageDialog(null, "TurnServer: " + TurnForServer);
 			}		
 			// To make sure there is no infinite loop inside this while loop
-			if(LoopCnt >= 1){
-				isLoopCase = true;
-				
-				//JOptionPane.showMessageDialog(null, "Alert! Loop Count: " + LoopCnt);
-			}else if(LoopCnt > 100){
+			if(LoopCnt > 100){
 
 				isForeverLoop = true;
 				break;
@@ -150,6 +146,10 @@ public class BalancedPartition{
 //		}
 
 		this.totalReplicaCount = this.returnReplicas(NodeList);
+		
+		if(LoopCnt > 0){
+			isLoopCase = true;
+		}
 	}
 	
 	public int replicaCount(){

@@ -235,24 +235,32 @@ public class PowerSets{
 					   BalancedPartition.isForeverLoop = false;
 				   }
 				    */
-				   if(getCategory().equals("LoopCase") && FileCounterLoopCase <= 100){
+				   if(BalancedPartition.isLoopCase && FileCounterLoopCase <= 100){
 					   writeIntoFile("LoopCases", "LoopCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterLoopCase) + ".txt");  	
 					   BalancedPartition.isLoopCase = false;
-				   }else if(getCategory().equals("ForeverLoopCase") && FileCounterForeverLoop <= 100){
+				   }
+				   
+				   if(BalancedPartition.isForeverLoop && FileCounterForeverLoop <= 100){
 					   writeIntoFile("ForeverLoopCases", "ForeverLoop_NumNodes_" + this.NumNodes + "_" + (++FileCounterForeverLoop) + ".txt");  	
 					   BalancedPartition.isForeverLoop = false;
 				   }
 				   
 				   
-				   if(getCategory().equals("AllZeroCase") && FileCounterZeroCase <= 100){
+				   if(BalancedPartition.isAllZeroCase && FileCounterZeroCase <= 100){
+					   
 					   writeIntoFile("AllZeroCases", "AllZeroCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroCase) + ".txt");  	
 					   BalancedPartition.isAllZeroCase = false;
-				   }else if(getCategory().equals("ZeroNegativeCase") && FileCounterZeroNegativeCase <= 100){
+					   
+				   }else if(BalancedPartition.isAllZeroNegativeCase && FileCounterZeroNegativeCase <= 100){
+					   
 					   writeIntoFile("AllZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroNegativeCase) + ".txt");  	
 					   BalancedPartition.isAllZeroNegativeCase = false;
-				   }else if(getCategory().equals("OneSideZeroNegativeCase") && FileCounterOneSideZeroNegativeCase <= 100){
+				   
+				   }else if(BalancedPartition.isOneSideZeroNegativeCase && FileCounterOneSideZeroNegativeCase <= 100){
+					
 					   writeIntoFile("OneSideZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterOneSideZeroNegativeCase) + ".txt");  	
 					   BalancedPartition.isOneSideZeroNegativeCase = false;
+				   
 				   }else{
 					   // do nothing
 				   }
@@ -272,21 +280,7 @@ public class PowerSets{
 	   System.out.println("\nTotal Possible Edge Combinations (2^EdgeCounts): " + realSetCounts + "\n\nPossible Sets: " + SetCounts);
 	}
 	
-	public String getCategory(){
-		if(BalancedPartition.isLoopCase){
-			return "LoopCase";
-		}else if(BalancedPartition.isForeverLoop){
-			return "ForeverLoopCase";
-		}else if(BalancedPartition.isAllZeroCase){
-			return "AllZeroCase";
-		}else if(BalancedPartition.isAllZeroNegativeCase){
-			return "ZeroNegativeCase";
-		}else if(BalancedPartition.isOneSideZeroNegativeCase){
-			return "OneSideZeroNegativeCase";
-		}else{
-			return "Nothing";
-		}
-	}
+	
 	
 	public void sleep(int time){
 		 try {
@@ -376,8 +370,8 @@ public class PowerSets{
 	
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-		PowerSets myPowerSets = new PowerSets(6);
+	
+		PowerSets myPowerSets = new PowerSets(5);
 		myPowerSets.getFilteredPowerSets();
 		
 		
