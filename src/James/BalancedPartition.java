@@ -7,6 +7,11 @@ import java.util.Hashtable;
 import javax.swing.JOptionPane;
 
 public class BalancedPartition{
+	public static boolean isForeverLoop = false;
+	public static boolean isAllZeroCase = false;
+	public static boolean isAllZeroNegativeCase = false;
+	public static boolean isOneSideZeroNegativeCase = false;
+	public static boolean isLoopCase = false;
 	// Hash table to store Node and it's corresponding nodes
 	GraphNode NodeWithMaxSCB = new GraphNode();
 	ArrayList<GraphNode> NodeList = new ArrayList<GraphNode>();	
@@ -55,7 +60,7 @@ public class BalancedPartition{
 		if(TotalNodes%2 == 0){
 			this.MaxDiff = 2;
 		} // Odd Nodes
-		else this.MaxDiff = 3;
+		else this.MaxDiff = 1;
 	}
 	
 	public void FindPartition(){
@@ -74,7 +79,9 @@ public class BalancedPartition{
 		
 		int NumNodesDiff = 0;
 		
-		for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
+		//for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
+		for(int j = 0; j < NodeSize/2; j++){
+			
 			this.FindNodeWithMaxSCB(NodeList, 0);
 			this.RunAlgorithm();
 			this.printAllNodeDetails(NodeList);
@@ -124,9 +131,13 @@ public class BalancedPartition{
 				//JOptionPane.showMessageDialog(null, "TurnServer: " + TurnForServer);
 			}		
 			// To make sure there is no infinite loop inside this while loop
-			if(LoopCnt >= 100){
+			if(LoopCnt >= 1){
+				isLoopCase = true;
 				
-				JOptionPane.showMessageDialog(null, "Alert! Loop Count: " + LoopCnt);
+				//JOptionPane.showMessageDialog(null, "Alert! Loop Count: " + LoopCnt);
+			}else if(LoopCnt > 100){
+
+				isForeverLoop = true;
 				break;
 			}
 		}
@@ -348,13 +359,14 @@ public class BalancedPartition{
 		//JOptionPane.showMessageDialog(null, "Testing Loops");
 		if(checkForAllZeros(myNodeList)){
 			//JOptionPane.showMessageDialog(null, "hi i am checkallzeros");
+			isAllZeroCase = true;
 			return true;
 		}else if(this.turnForServer == 0 && getNumNodeServer0() >= getNumNodeServer1()){
-			
+			isAllZeroNegativeCase = true;
 			return(checkForZeroAndNegativeSCB(myNodeList));	
 			
 		}else if(this.turnForServer == 1 && getNumNodeServer1() >= getNumNodeServer0()){
-			
+			isOneSideZeroNegativeCase = true;
 			return(checkForZeroAndNegativeSCB(myNodeList));
 		}else{
 			return false;

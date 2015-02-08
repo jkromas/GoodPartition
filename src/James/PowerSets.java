@@ -2,6 +2,7 @@
  * 
  */
 package James;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
@@ -23,16 +24,29 @@ public class PowerSets{
 	 */
 	int myAdjMatrix[][];
 	int NumNodes;
+	int FileCounterForeverLoop;
+	int FileCounterLoopCase;
+	int FileCounterZeroCase;
+	int FileCounterZeroNegativeCase;
+	int FileCounterOneSideZeroNegativeCase;
+	
 	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();
 	
 	public PowerSets() {
 		// Initializing or clearing Adjacent Matrix
 		NumNodes = 4;
+		FileCounterForeverLoop = 0;
+		FileCounterLoopCase = 0;
+		FileCounterZeroCase = 0;
+		FileCounterZeroNegativeCase = 0;
+		FileCounterOneSideZeroNegativeCase = 0;
+		
 		myAdjMatrix = new int[NumNodes][NumNodes];
 		initializedAdjMatrix(); 
 	}
 	
 	public PowerSets(int NumNodes) {
+		this();
 		this.NumNodes = NumNodes;
 		myAdjMatrix = new int[NumNodes][NumNodes];
 		initializedAdjMatrix();
@@ -68,7 +82,7 @@ public class PowerSets{
 	   if(elements < 16){
 		   powerElements = (int) Math.pow(2,elements);
 	  }else{
-		  powerElements = 100000;
+		  powerElements = 300000;
 	  }
 	   //run a binary counter for the number of power elements
 	   for (int i = 0; i < powerElements; i++) { 
@@ -209,12 +223,40 @@ public class PowerSets{
 			   
 			   if(!checkZeroRowsInMatrix()){
 				   //printMatrix();
-				   writeIntoFile();
-			  	  
+				   
 				   // Converts myAdjMatrix into List of Graph Nodes
 				   assignServer();
 				   BalancedPartition myPartition = new BalancedPartition(myNodeList);
 				   myPartition.FindPartition();
+				   
+				   /*
+				   if(BalancedPartition.isForeverLoop){
+					   writeIntoFile("ForeverLoop_NumNodes_" + this.NumNodes + "_" + (++FileCounter) + ".txt");  	
+					   BalancedPartition.isForeverLoop = false;
+				   }
+				    */
+				   if(getCategory().equals("LoopCase") && FileCounterLoopCase <= 100){
+					   writeIntoFile("LoopCases", "LoopCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterLoopCase) + ".txt");  	
+					   BalancedPartition.isLoopCase = false;
+				   }else if(getCategory().equals("ForeverLoopCase") && FileCounterForeverLoop <= 100){
+					   writeIntoFile("ForeverLoopCases", "ForeverLoop_NumNodes_" + this.NumNodes + "_" + (++FileCounterForeverLoop) + ".txt");  	
+					   BalancedPartition.isForeverLoop = false;
+				   }
+				   
+				   
+				   if(getCategory().equals("AllZeroCase") && FileCounterZeroCase <= 100){
+					   writeIntoFile("AllZeroCases", "AllZeroCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroCase) + ".txt");  	
+					   BalancedPartition.isAllZeroCase = false;
+				   }else if(getCategory().equals("ZeroNegativeCase") && FileCounterZeroNegativeCase <= 100){
+					   writeIntoFile("AllZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroNegativeCase) + ".txt");  	
+					   BalancedPartition.isAllZeroNegativeCase = false;
+				   }else if(getCategory().equals("OneSideZeroNegativeCase") && FileCounterOneSideZeroNegativeCase <= 100){
+					   writeIntoFile("OneSideZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterOneSideZeroNegativeCase) + ".txt");  	
+					   BalancedPartition.isOneSideZeroNegativeCase = false;
+				   }else{
+					   // do nothing
+				   }
+				   
 				   SetCounts++;
 				   //sleep(1);
 			   }
@@ -228,6 +270,22 @@ public class PowerSets{
 	   
 	     
 	   System.out.println("\nTotal Possible Edge Combinations (2^EdgeCounts): " + realSetCounts + "\n\nPossible Sets: " + SetCounts);
+	}
+	
+	public String getCategory(){
+		if(BalancedPartition.isLoopCase){
+			return "LoopCase";
+		}else if(BalancedPartition.isForeverLoop){
+			return "ForeverLoopCase";
+		}else if(BalancedPartition.isAllZeroCase){
+			return "AllZeroCase";
+		}else if(BalancedPartition.isAllZeroNegativeCase){
+			return "ZeroNegativeCase";
+		}else if(BalancedPartition.isOneSideZeroNegativeCase){
+			return "OneSideZeroNegativeCase";
+		}else{
+			return "Nothing";
+		}
 	}
 	
 	public void sleep(int time){
@@ -244,6 +302,39 @@ public class PowerSets{
 		
 		try {
 			writer = new PrintWriter("Examples\\Input.txt", "UTF-8");
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	
+		for(int i = 0; i < this.NumNodes; i++){
+			for(int j = 0; j < this.NumNodes; j++){
+				System.out.print(" " + myAdjMatrix[i][j]);
+				writer.print(" " + myAdjMatrix[i][j]);
+			}
+			writer.println();
+			System.out.println("\n");
+		}
+		writer.close();
+	}
+	
+	public void writeIntoFile(String DirectoryName, String FileName){
+		PrintWriter writer = null;
+		// to create a new directory
+		File file = new File(DirectoryName);
+		if (!file.exists()) {
+			if (file.mkdir()) {
+				System.out.println("Directory is created!");
+			} else {
+				System.out.println("Failed to create directory!");
+			}
+		}
+		
+		try {
+			writer = new PrintWriter(DirectoryName + "\\" + FileName, "UTF-8");
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (UnsupportedEncodingException e) {
@@ -286,7 +377,7 @@ public class PowerSets{
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		PowerSets myPowerSets = new PowerSets(7);
+		PowerSets myPowerSets = new PowerSets(6);
 		myPowerSets.getFilteredPowerSets();
 		
 		
