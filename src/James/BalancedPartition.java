@@ -83,7 +83,7 @@ public class BalancedPartition{
 		int NumNodesDiff = 0;
 		
 		//for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
-		for(int j = 0; j < NodeSize/2 + (this.NodeSize%2-1); j++){
+		for(int j = 1; j <= NodeSize/2; j++){
 			// Just before entering loop condition to determine final stage, make sure that black server has higher number
 			// of nodes than blue server
 			
@@ -102,7 +102,7 @@ public class BalancedPartition{
 		System.out.println("Total Node Size 0: " + getNumNodeServer0());
 		System.out.println("Total Node Size 1: " + getNumNodeServer1());
 		
-		turnForServer = 0;	
+		turnForServer = 0;
 				
 		this.setMaxDiff(NodeSize);
 		// to find out how many times the algorithm goes through the while loop

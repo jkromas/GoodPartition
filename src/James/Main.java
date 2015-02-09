@@ -37,22 +37,19 @@ public class Main {
 		//RandomInput myInput = new RandomInput(9, "Examples//Example_9_Slide.txt"); // Loop Count = 4; Replicas = 8
 		//RandomInput myInput = new RandomInput(6, "Examples//Example_Loop_Count_9.txt"); // Loop Count = 0; Replicas = 5
 		//RandomInput myInput = new RandomInput(5, "Examples//Example_InfiniteLoop.txt"); // Loop Count = 9; Replicas = 5
-		//BalancedPartition.MaxLoopCount = 105;
-		 RandomInput myInput = new RandomInput(6, "ForeverLoopCases//ForeverLoop_NumNodes_6_21.txt"); // Loop Count = 0; Replicas = 5
+		BalancedPartition.MaxLoopCount = 5;
+		for(int i = 1; i < 17; i++){
+			RandomInput myInput = new RandomInput(5, "ForeverLoopCases//ForeverLoop_NumNodes_5_" + i + ".txt"); // Loop Count = 0; Replicas = 5
+			try {
+				myInput.readInputFile();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		
-	
-  
-	          
-		try {
-			myInput.readInputFile();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			BalancedPartition myPartition = new BalancedPartition(myInput.getNodeList());
+			myPartition.FindPartition();
 		}
-	
-		BalancedPartition myPartition = new BalancedPartition(myInput.getNodeList());
-		myPartition.FindPartition();
-
 		
 	}
 
