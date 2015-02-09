@@ -3,6 +3,7 @@ package James;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Random;
 
 import javax.swing.JOptionPane;
 
@@ -20,6 +21,8 @@ public class BalancedPartition{
 	int turnForServer = -1;
 	int NumNodeServer0 = 0;
 	int NumNodeServer1 = 0;
+	public static int MaxLoopCount = 4;
+	
 	private int totalReplicaCount;
 	
 
@@ -80,7 +83,9 @@ public class BalancedPartition{
 		int NumNodesDiff = 0;
 		
 		//for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
-		for(int j = 0; j < NodeSize/2; j++){
+		for(int j = 0; j < NodeSize/2 + (this.NodeSize%2-1); j++){
+			// Just before entering loop condition to determine final stage, make sure that black server has higher number
+			// of nodes than blue server
 			
 			this.FindNodeWithMaxSCB(NodeList, 0);
 			this.RunAlgorithm();
@@ -97,18 +102,19 @@ public class BalancedPartition{
 		System.out.println("Total Node Size 0: " + getNumNodeServer0());
 		System.out.println("Total Node Size 1: " + getNumNodeServer1());
 		
-		turnForServer = 0;
-		
+		turnForServer = 0;	
+				
 		this.setMaxDiff(NodeSize);
 		// to find out how many times the algorithm goes through the while loop
 		int LoopCnt = 0;
 		
 		while(this.DetermineFinalState(NodeList) != true){
-			LoopCnt++;
+			
 			NumNodesDiff = Math.abs(getNumNodeServer1() - getNumNodeServer0());
 			System.out.println("Node Difference Inside Loop: " + NumNodesDiff);
 			// To switch turn for finding max SCB nodes	
 			if(NumNodesDiff <= this.MaxDiff){
+				
 				if(turnForServer == 1){
 					this.FindNodeWithMaxSCB(NodeList, 1);
 					this.RunAlgorithm();
@@ -117,7 +123,7 @@ public class BalancedPartition{
 					setNumNodeServer0(getNumNodeServer0() + 1); 
 					NumNodesDiff = Math.abs(getNumNodeServer1() - getNumNodeServer0());
 					turnForServer = 0;
-					
+					LoopCnt++;	
 				}else{
 					this.FindNodeWithMaxSCB(NodeList, 0);
 					this.RunAlgorithm();
@@ -126,12 +132,13 @@ public class BalancedPartition{
 					setNumNodeServer1(getNumNodeServer1() + 1); 
 					NumNodesDiff = Math.abs(getNumNodeServer1() - getNumNodeServer0());
 					turnForServer = 1;
+					LoopCnt++;
 				}
 				System.out.println("Server 0 Size:" + getNumNodeServer0() + " Num Replicas: " + this.returnReplicas(NodeList));
 				//JOptionPane.showMessageDialog(null, "TurnServer: " + TurnForServer);
 			}		
 			// To make sure there is no infinite loop inside this while loop
-			if(LoopCnt > 100){
+			if(LoopCnt > MaxLoopCount){
 
 				isForeverLoop = true;
 				break;
@@ -149,6 +156,7 @@ public class BalancedPartition{
 		
 		if(LoopCnt > 0){
 			isLoopCase = true;
+			
 		}
 	}
 	
@@ -157,6 +165,7 @@ public class BalancedPartition{
 	}
 	
 	public void FindNodeWithMaxSCB(ArrayList<GraphNode> myNodeList, int ServerID){
+		Random rand = new Random();
 		//NodeWithMaxSCB = null;
 		GraphNode tempNode = null;
 		
@@ -173,8 +182,11 @@ public class BalancedPartition{
 				tempNode.computeSCB();
 				int tempSCB = tempNode.getSCB();
 				if(tempSCB > MaxSCB){
+					 
 					MaxSCB = tempSCB; // Find Maximum
 					NodeWithMaxSCB = tempNode;
+						
+					
 				}
 				
 				//tempNode.printMyDetails();
@@ -368,9 +380,9 @@ public class BalancedPartition{
 		}else if(this.turnForServer == 1 && getNumNodeServer1() >= getNumNodeServer0()){
 			isOneSideZeroNegativeCase = true;
 			return(checkForZeroAndNegativeSCB(myNodeList));
-		}else{
-			return false;
 		}
+		
+		return false;
 
 	}
 
