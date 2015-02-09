@@ -21,7 +21,7 @@ public class BalancedPartition{
 	int turnForServer = -1;
 	int NumNodeServer0 = 0;
 	int NumNodeServer1 = 0;
-	public static int MaxLoopCount = 4;
+	public static int MaxLoopCount = 1000;
 	
 	private int totalReplicaCount;
 	
@@ -187,6 +187,11 @@ public class BalancedPartition{
 					NodeWithMaxSCB = tempNode;
 						
 					
+				}else if(tempSCB == MaxSCB){
+					if(rand.nextInt(100) < 20){ // With equal probability
+						//JOptionPane.showMessageDialog(null, "Random Value: " + rand.nextInt(100));
+						MaxSCB = tempSCB;
+					}
 				}
 				
 				//tempNode.printMyDetails();
