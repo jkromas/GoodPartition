@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 public class BalancedPartition{
 	public static boolean isForeverLoop = false;
 	public static boolean isAllZeroCase = false;
+	public static boolean isAllZeroExceptOne = false;
 	public static boolean isAllZeroNegativeCase = false;
 	public static boolean isOneSideZeroNegativeCase = false;
 	public static boolean isLoopCase = false;
@@ -83,7 +84,7 @@ public class BalancedPartition{
 		int NumNodesDiff = 0;
 		
 		//for(int j = 0; j < NodeSize/2 + (this.MaxDiff - 2); j++){
-		for(int j = 1; j <= NodeSize/2; j++){
+		for(int j = 1; j <= NodeSize/2; j++){ // Modified latest
 			// Just before entering loop condition to determine final stage, make sure that black server has higher number
 			// of nodes than blue server
 			
@@ -141,6 +142,7 @@ public class BalancedPartition{
 			if(LoopCnt > MaxLoopCount){
 
 				isForeverLoop = true;
+				JOptionPane.showMessageDialog(null, "I am a Forever Loop with Loop Count of " + LoopCnt);
 				break;
 			}
 		}
@@ -182,15 +184,16 @@ public class BalancedPartition{
 				tempNode.computeSCB();
 				int tempSCB = tempNode.getSCB();
 				if(tempSCB > MaxSCB){
-					 
+					
 					MaxSCB = tempSCB; // Find Maximum
 					NodeWithMaxSCB = tempNode;
-						
+					//JOptionPane.showMessageDialog(null, "I am Max Node: " + MaxSCB);
 					
 				}else if(tempSCB == MaxSCB){
-					if(rand.nextInt(100) < 20){ // With equal probability
+					if(rand.nextInt(100) < 50){ // With equal probability
 						//JOptionPane.showMessageDialog(null, "Random Value: " + rand.nextInt(100));
 						MaxSCB = tempSCB;
+						NodeWithMaxSCB = tempNode;
 					}
 				}
 				
@@ -333,6 +336,32 @@ public class BalancedPartition{
 		
 	}
 	
+	
+	public boolean checkForAllZerosExceptOne(ArrayList<GraphNode> myNodeList){
+		int SCBCounterForOne = 0;
+		int SCBCounter = 0;
+		for(int i = 0; i < myNodeList.size(); i++){
+			
+			if(myNodeList.get(i).getSCB() == 1 || myNodeList.get(i).getSCB() == 0){
+					SCBCounter++;
+					if(myNodeList.get(i).getSCB() == 1){
+						SCBCounterForOne++;
+						if(SCBCounterForOne > 1){
+							return false;
+						}
+					}
+					
+					
+			}
+				
+		}
+		
+		if(SCBCounter == this.NodeSize){
+			return true;
+		}else return false;
+			
+	}
+			
 	public boolean checkForZeroAndNegativeSCB(ArrayList<GraphNode> myNodeList){
 		int NegativeSCBCounts = 0;
 		int AllSideNegSCBCounts = 0;
@@ -377,6 +406,11 @@ public class BalancedPartition{
 		if(checkForAllZeros(myNodeList)){
 			//JOptionPane.showMessageDialog(null, "hi i am checkallzeros");
 			isAllZeroCase = true;
+			return true;
+		}else if(checkForAllZerosExceptOne(myNodeList)){
+			// this is one of the returning pattern I found in a graph with 5 nodes
+			// All nodes with zero SCBs with at most one node with SCB equals to 1
+			isAllZeroExceptOne = true;
 			return true;
 		}else if(this.turnForServer == 0 && getNumNodeServer0() >= getNumNodeServer1()){
 			isAllZeroNegativeCase = true;

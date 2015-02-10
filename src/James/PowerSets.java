@@ -29,6 +29,8 @@ public class PowerSets{
 	int FileCounterZeroCase;
 	int FileCounterZeroNegativeCase;
 	int FileCounterOneSideZeroNegativeCase;
+	int FileCounterZeroExceptOneCase;
+	
 	int MaxFileCount = 100;
 
 	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();
@@ -252,6 +254,11 @@ public class PowerSets{
 					   writeIntoFile("AllZeroCases", "AllZeroCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroCase) + ".txt");  	
 					   BalancedPartition.isAllZeroCase = false;
 					   
+				   }else if(BalancedPartition.isAllZeroExceptOne && FileCounterZeroExceptOneCase < MaxFileCount){
+					   
+					   writeIntoFile("AllZeroExceptOneCases", "AllZeroExceptOneCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroExceptOneCase) + ".txt");  	
+					   BalancedPartition.isAllZeroCase = false;
+					   
 				   }else if(BalancedPartition.isAllZeroNegativeCase && FileCounterZeroNegativeCase < MaxFileCount){
 					   
 					   writeIntoFile("AllZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroNegativeCase) + ".txt");  	
@@ -375,9 +382,11 @@ public class PowerSets{
 		PowerSets myPowerSets_5 = new PowerSets(5);
 		myPowerSets_5.getFilteredPowerSets();
 		
-
 		PowerSets myPowerSets_6 = new PowerSets(6);
 		myPowerSets_6.getFilteredPowerSets();
+		
+		PowerSets myPowerSets_7 = new PowerSets(7);
+		myPowerSets_7.getFilteredPowerSets();
 	}
 
 }
