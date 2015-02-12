@@ -22,6 +22,7 @@ public class BalancedPartition{
 	int turnForServer = -1;
 	int NumNodeServer0 = 0;
 	int NumNodeServer1 = 0;
+	int LoopCnt;
 	public static int MaxLoopCount = 1000;
 	
 	private int totalReplicaCount;
@@ -107,7 +108,7 @@ public class BalancedPartition{
 				
 		this.setMaxDiff(NodeSize);
 		// to find out how many times the algorithm goes through the while loop
-		int LoopCnt = 0;
+		LoopCnt = 0;
 		
 		while(this.DetermineFinalState(NodeList) != true){
 			
@@ -341,8 +342,8 @@ public class BalancedPartition{
 		int SCBCounterForOne = 0;
 		int SCBCounter = 0;
 		for(int i = 0; i < myNodeList.size(); i++){
-			
-			if(myNodeList.get(i).getSCB() == 1 || myNodeList.get(i).getSCB() == 0){
+			// all the nodes on higher side have zero SCB and the other side have at most one node with SCB equal to 1
+			if((myNodeList.get(i).getSCB() == 1 && myNodeList.get(i).getServerID() != this.turnForServer) || myNodeList.get(i).getSCB() == 0){
 					SCBCounter++;
 					if(myNodeList.get(i).getSCB() == 1){
 						SCBCounterForOne++;
@@ -404,10 +405,10 @@ public class BalancedPartition{
 
 		//JOptionPane.showMessageDialog(null, "Testing Loops");
 		if(checkForAllZeros(myNodeList)){
-			//JOptionPane.showMessageDialog(null, "hi i am checkallzeros");
 			isAllZeroCase = true;
 			return true;
-		}else if(checkForAllZerosExceptOne(myNodeList)){
+		}else if(checkForAllZerosExceptOne(myNodeList) && LoopCnt > 100){
+			// Enable this condition only if the algorithm run forever
 			// this is one of the returning pattern I found in a graph with 5 nodes
 			// All nodes with zero SCBs with at most one node with SCB equals to 1
 			isAllZeroExceptOne = true;
