@@ -378,17 +378,17 @@ public class PowerSets{
 
 	public static void main(String[] args) {
 	
-//		PowerSets myPowerSets_4 = new PowerSets(4);
-//		myPowerSets_4.getFilteredPowerSets();
-//		
-//		PowerSets myPowerSets_5 = new PowerSets(5);
-//		myPowerSets_5.getFilteredPowerSets();
+		PowerSets myPowerSets_4 = new PowerSets(4);
+		myPowerSets_4.getFilteredPowerSets();
+	
+		PowerSets myPowerSets_5 = new PowerSets(5);
+		myPowerSets_5.getFilteredPowerSets();
 		
 		PowerSets myPowerSets_6 = new PowerSets(6);
 		myPowerSets_6.getFilteredPowerSets();
-//		
-//		PowerSets myPowerSets_7 = new PowerSets(7);
-//		myPowerSets_7.getFilteredPowerSets();
+		
+		PowerSets myPowerSets_7 = new PowerSets(7);
+		myPowerSets_7.getFilteredPowerSets();
 	}
 
 }

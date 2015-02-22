@@ -371,14 +371,14 @@ public class BalancedPartition{
 				}else if(myCurrentNode.getSCB() < 0 && myCurrentNode.getServerID() != HigherSideServer){
 					NegativeSCBCountLowerSide++;
 				}
-				
-				if(myCurrentNode.getSCB() == 0 && EqualSides){
-					ZeroOnEqualSides++;
-				}else if(myCurrentNode.getSCB() < 0 && EqualSides){
-					NegativeOnEqualSides++;
-				}
-					
+						
 									
+			}
+			
+			if(myCurrentNode.getSCB() == 0 && EqualSides){
+				ZeroOnEqualSides++;
+			}else if(myCurrentNode.getSCB() < 0 && EqualSides){
+				NegativeOnEqualSides++;
 			}
 		}
 		
@@ -391,7 +391,7 @@ public class BalancedPartition{
 		}else if(NegativeSCBCountHigherSide != 0 && (ZeroSCBCountHigherSide + NegativeSCBCountHigherSide) == NumNodesHigherSide){
 			isHigherSideZeroAndNegativeCase = true;
 			return true;
-		}else if((ZeroSCBCountHigherSide + ZeroSCBCountLowerSide + ZeroOnEqualSides) == (myNodeList.size() - 1) && LoopCnt > 100){
+		}else if((ZeroSCBCountHigherSide + ZeroSCBCountLowerSide + ZeroOnEqualSides) == (myNodeList.size() - 1) && LoopCnt > 20){
 			isAllZeroExceptOne = true;
 			return true;
 		}else{
