@@ -26,13 +26,12 @@ public class PowerSets{
 	int NumNodes;
 	int FileCounterForeverLoop;
 	int FileCounterLoopCase;
-	int FileCounterZeroCase;
-	int FileCounterZeroNegativeCase;
-	int FileCounterOneSideZeroNegativeCase;
-	int FileCounterZeroExceptOneCase;
+	int FileCounterAllZeroCase;
+	int FileCounterAllZeroAndNegativeCase;
+	int FileCounterHigherSideZeroAndNegativeCase;
+	int FileCounterAllZeroExceptOneCase;
 	
-	int MaxFileCount = 20;
-
+	int MaxFileCount = 100;
 	ArrayList<GraphNode> myNodeList = new ArrayList<GraphNode>();
 	
 	public PowerSets() {
@@ -40,9 +39,9 @@ public class PowerSets{
 		NumNodes = 4;
 		FileCounterForeverLoop = 0;
 		FileCounterLoopCase = 0;
-		FileCounterZeroCase = 0;
-		FileCounterZeroNegativeCase = 0;
-		FileCounterOneSideZeroNegativeCase = 0;
+		FileCounterAllZeroCase = 0;
+		FileCounterAllZeroAndNegativeCase = 0;
+		FileCounterHigherSideZeroAndNegativeCase = 0;
 		
 		myAdjMatrix = new int[NumNodes][NumNodes];
 		initializedAdjMatrix(); 
@@ -249,25 +248,25 @@ public class PowerSets{
 				   }
 				   
 				   
-				   if(BalancedPartition.isAllZeroCase && FileCounterZeroCase < MaxFileCount){
+				   if(BalancedPartition.isAllZeroCase && FileCounterAllZeroCase < MaxFileCount){
 					   
-					   writeIntoFile("AllZeroCases", "AllZeroCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroCase) + ".txt");  	
+					   writeIntoFile("AllZeroCases", "AllZeroCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterAllZeroCase) + ".txt");  	
 					   BalancedPartition.isAllZeroCase = false;
 					   
-				   }else if(BalancedPartition.isAllZeroExceptOne && FileCounterZeroExceptOneCase < MaxFileCount){
+				   }else if(BalancedPartition.isAllZeroExceptOne && FileCounterAllZeroExceptOneCase < MaxFileCount){
 					   
-					   writeIntoFile("AllZeroExceptOneCases", "AllZeroExceptOneCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroExceptOneCase) + ".txt");  	
+					   writeIntoFile("AllZeroExceptOneCase", "AllZeroExceptOneCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterAllZeroExceptOneCase) + ".txt");  	
 					   BalancedPartition.isAllZeroExceptOne = false;
 					   
-				   }else if(BalancedPartition.isAllZeroNegativeCase && FileCounterZeroNegativeCase < MaxFileCount){
+				   }else if(BalancedPartition.isAllSideZeroAndNegativeCase && FileCounterAllZeroAndNegativeCase < MaxFileCount){
 					   
-					   writeIntoFile("AllZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterZeroNegativeCase) + ".txt");  	
-					   BalancedPartition.isAllZeroNegativeCase = false;
+					   writeIntoFile("AllZeroAndNegativeCases","AllZeroAndNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterAllZeroAndNegativeCase) + ".txt");  	
+					   BalancedPartition.isAllSideZeroAndNegativeCase = false;
 				   
-				   }else if(BalancedPartition.isOneSideZeroNegativeCase && FileCounterOneSideZeroNegativeCase < MaxFileCount){
+				   }else if(BalancedPartition.isHigherSideZeroAndNegativeCase && FileCounterHigherSideZeroAndNegativeCase < MaxFileCount){
 					
-					   writeIntoFile("OneSideZeroNegativeCases","ZeroNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterOneSideZeroNegativeCase) + ".txt");  	
-					   BalancedPartition.isOneSideZeroNegativeCase = false;
+					   writeIntoFile("HigherSideZeroAndNegativeCases","HigherSideZeroAndNegativeCase_NumNodes_" + this.NumNodes + "_" + (++FileCounterHigherSideZeroAndNegativeCase) + ".txt");  	
+					   BalancedPartition.isHigherSideZeroAndNegativeCase = false;
 				   
 				   }else{
 					   // do nothing

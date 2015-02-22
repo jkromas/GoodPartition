@@ -11,8 +11,8 @@ public class BalancedPartition{
 	public static boolean isForeverLoop = false;
 	public static boolean isAllZeroCase = false;
 	public static boolean isAllZeroExceptOne = false;
-	public static boolean isAllZeroNegativeCase = false;
-	public static boolean isOneSideZeroNegativeCase = false;
+	public static boolean isAllSideZeroAndNegativeCase = false;
+	public static boolean isHigherSideZeroAndNegativeCase = false;
 	public static boolean isLoopCase = false;
 	// Hash table to store Node and it's corresponding nodes
 	GraphNode NodeWithMaxSCB = new GraphNode();
@@ -23,7 +23,7 @@ public class BalancedPartition{
 	int NumNodeServer0 = 0;
 	int NumNodeServer1 = 0;
 	int LoopCnt;
-	public static int MaxLoopCount = 1000;
+	public static int MaxLoopCount = 100;
 	
 	private int totalReplicaCount;
 	
@@ -143,7 +143,7 @@ public class BalancedPartition{
 			if(LoopCnt > MaxLoopCount){
 
 				isForeverLoop = true;
-				JOptionPane.showMessageDialog(null, "I am a Forever Loop with Loop Count of " + LoopCnt);
+				//JOptionPane.showMessageDialog(null, "I am a Forever Loop with Loop Count of " + LoopCnt);
 				break;
 			}
 		}
@@ -323,76 +323,80 @@ public class BalancedPartition{
 		return false;
 	}
 	
-	public boolean checkForAllZeros(ArrayList<GraphNode> myNodeList){
-		for(int i = 0; i < myNodeList.size(); i++){
-			
-			if(myNodeList.get(i).getSCB() != 0){ 
-					return false;
-			}
-			
-		}
-		
-			
-		return true; // if all of SCBs are zero
-		
-	}
 	
+	// if all -ve and zero SCB returns true or if higher side server has -ve and zero SCBs then returns true
 	
-	public boolean checkForAllZerosExceptOne(ArrayList<GraphNode> myNodeList){
-		int SCBCounterForOne = 0;
-		int SCBCounter = 0;
-		for(int i = 0; i < myNodeList.size(); i++){
-			// all the nodes on higher side have zero SCB and the other side have at most one node with SCB equal to 1
-			if((myNodeList.get(i).getSCB() == 1 && myNodeList.get(i).getServerID() != this.turnForServer) || myNodeList.get(i).getSCB() == 0){
-					SCBCounter++;
-					if(myNodeList.get(i).getSCB() == 1){
-						SCBCounterForOne++;
-						if(SCBCounterForOne > 1){
-							return false;
-						}
-					}
-					
-					
-			}
+	boolean checkSCBForAllNodes(ArrayList<GraphNode> myNodeList){
 				
+		// check for one side zero and negative
+		int NegativeSCBCountHigherSide = 0;
+		int NegativeSCBCountLowerSide = 0;
+		
+		int ZeroSCBCountHigherSide = 0;
+		int ZeroSCBCountLowerSide = 0;
+	
+		int ZeroOnEqualSides = 0;
+		int NegativeOnEqualSides = 0;
+		
+		int HigherSideServer = -1; // Server 0 or Server 1
+		int NumNodesHigherSide = 0;
+		boolean EqualSides = false;
+		
+		if(getNumNodeServer0() > getNumNodeServer1()){
+			HigherSideServer = 0;
+			NumNodesHigherSide = getNumNodeServer0();
+		}else if(getNumNodeServer1() > getNumNodeServer0()){
+			HigherSideServer = 1;
+			NumNodesHigherSide = getNumNodeServer1();
+		}else{
+			EqualSides = true; // for even case this might be possible 
 		}
 		
-		if(SCBCounter == this.NodeSize){
-			return true;
-		}else return false;
-			
-	}
-			
-	public boolean checkForZeroAndNegativeSCB(ArrayList<GraphNode> myNodeList){
-		int NegativeSCBCounts = 0;
-		int AllSideNegSCBCounts = 0;
-		// returns true if all the nodes from server defined by turnForServer have negative or zero SCB 
+		
+		// find out which side has higher number of nodes
+		
 		for(int i = 0; i < myNodeList.size(); i++){
 			
-			if(myNodeList.get(i).getSCB() <= 0){ // if all of them are -ve or zeros
-				AllSideNegSCBCounts++;
-				if(AllSideNegSCBCounts == myNodeList.size()){
-					//JOptionPane.showMessageDialog(null, "This is all SCBs either zero or negative case !");
-					return true;
+			GraphNode myCurrentNode = (GraphNode) myNodeList.get(i);
+			
+			if(myCurrentNode.getSCB() <= 0 && !EqualSides){
+				
+				if(myCurrentNode.getSCB() == 0 && myCurrentNode.getServerID() == HigherSideServer){
+					ZeroSCBCountHigherSide++;
+					
+				}else if(myCurrentNode.getSCB() == 0 && myCurrentNode.getServerID() != HigherSideServer){
+					ZeroSCBCountLowerSide++;
+				}else if(myCurrentNode.getSCB() < 0 && myCurrentNode.getServerID() == HigherSideServer){
+					NegativeSCBCountHigherSide++;
+				}else if(myCurrentNode.getSCB() < 0 && myCurrentNode.getServerID() != HigherSideServer){
+					NegativeSCBCountLowerSide++;
 				}
-			}
-			
-			if(myNodeList.get(i).getServerID() == this.turnForServer && myNodeList.get(i).getSCB() > 0){
 				
-				//JOptionPane.showMessageDialog(null, "This is Server" + this.turnForServer + " and this is not the final state!");
-				return false;	
-			}else if(myNodeList.get(i).getServerID() == this.turnForServer && myNodeList.get(i).getSCB() < 0){
-				NegativeSCBCounts++;
-				//JOptionPane.showMessageDialog(null, "This is Server" + this.turnForServer + " and this is all zero and negative case with atleast " + NegativeSCBCounts + " negative SCB counts!");
-				
+				if(myCurrentNode.getSCB() == 0 && EqualSides){
+					ZeroOnEqualSides++;
+				}else if(myCurrentNode.getSCB() < 0 && EqualSides){
+					NegativeOnEqualSides++;
+				}
+					
+									
 			}
-		}	
+		}
 		
-		if(NegativeSCBCounts == 0){ // There should be at least one negative SCB.
-			//JOptionPane.showMessageDialog(null, "This is Server" + this.turnForServer + " and this is all zero case but not the final state!");
+		if((ZeroSCBCountHigherSide + ZeroSCBCountLowerSide + ZeroOnEqualSides) == myNodeList.size()){ // if all are zeros
+			isAllZeroCase = true;
+			return true; 
+		}else if((ZeroOnEqualSides + NegativeOnEqualSides + ZeroSCBCountHigherSide + ZeroSCBCountLowerSide + NegativeSCBCountHigherSide + NegativeSCBCountLowerSide) == myNodeList.size()){
+			isAllSideZeroAndNegativeCase = true;
+			return true;
+		}else if(NegativeSCBCountHigherSide != 0 && (ZeroSCBCountHigherSide + NegativeSCBCountHigherSide) == NumNodesHigherSide){
+			isHigherSideZeroAndNegativeCase = true;
+			return true;
+		}else if((ZeroSCBCountHigherSide + ZeroSCBCountLowerSide + ZeroOnEqualSides) == (myNodeList.size() - 1) && LoopCnt > 100){
+			isAllZeroExceptOne = true;
+			return true;
+		}else{
 			return false;
 		}
-		else return true;
 		
 	}
 	
@@ -400,57 +404,11 @@ public class BalancedPartition{
 	 * the final state of the algorithm will end with zero or -ve SCB of the server
 	 * whose one of the nodes is going to be changed in next step */
 	public boolean DetermineFinalState(ArrayList<GraphNode> myNodeList){ 
-	//public boolean DetermineFinalState(ArrayList<Node> myNodeList, int ServerTurn){ 
-		// If all the nodes has zero or negative SCB then we declare the end state of the algorithm
-
-		//JOptionPane.showMessageDialog(null, "Testing Loops");
-		if(checkForAllZeros(myNodeList)){
-			isAllZeroCase = true;
-			return true;
-		}else if(checkForAllZerosExceptOne(myNodeList) && LoopCnt > 100){
-			// Enable this condition only if the algorithm run forever
-			// this is one of the returning pattern I found in a graph with 5 nodes
-			// All nodes with zero SCBs with at most one node with SCB equals to 1
-			isAllZeroExceptOne = true;
-			return true;
-		}else if(this.turnForServer == 0 && getNumNodeServer0() >= getNumNodeServer1()){
-			isAllZeroNegativeCase = true;
-			return(checkForZeroAndNegativeSCB(myNodeList));	
-			
-		}else if(this.turnForServer == 1 && getNumNodeServer1() >= getNumNodeServer0()){
-			isOneSideZeroNegativeCase = true;
-			return(checkForZeroAndNegativeSCB(myNodeList));
-		}
-		
-		return false;
-
+	
+		return checkSCBForAllNodes(myNodeList);
 	}
 
 
-
-	/*public boolean DetermineFinalState(ArrayList<Node> myNodeList){ 
-	//public boolean DetermineFinalState(ArrayList<Node> myNodeList, int ServerTurn){ 
-		// If all the nodes has zero or negative SCB then we declare the end state of the algorithm
-		int Count = 0;
-		for(int i = 0; i < myNodeList.size(); i++){
-			if(myNodeList.get(i).getServerID() == turnForServer){
-				if(myNodeList.get(i).getSCB() >= 0){
-					if(myNodeList.get(i).getSCB() == 0){
-						Count++;
-					}
-					else{
-						return false; // if one of the nodes has positive gain then that is not the final state
-					}
-				}			
-			}
-			if(Count > 1){ // do not tolerate more than one zero from this server side --> This side of server is the one with highest nodes among two servers 
-				return false;
-			}
-		}
-				
-		return true;	
-	}
-*/
 	public int getNodeCounts(ArrayList<GraphNode> myNodeList){
 		int NodeCnt = 0;
 		for(int i = 0; i < myNodeList.size(); i++){
